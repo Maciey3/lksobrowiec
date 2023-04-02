@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    height: 300vh;
+    /* overflow-x: hidden; */
+}
+
+
+.small-shadow{
+    box-shadow: 2px 2px 9px 0px #595959;
+}
+
+.big-shadow{
+    box-shadow: 2px 3px 10px 3px #595959;
+}
+
+.articleShadow{
+    background: linear-gradient(to top, black, #00000091, transparent);
+}
+
+.text-shadow{
+    text-shadow: 0 0 5px black;
+}
+
+.buttonAbout{
+    background-image: url('obrowiec.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 85%;
+}
+
+.transition-long{
+    transition: 0.5s ease-out;
+}
+
+.buttonAbout:hover{
+    background-size: 90%;
+}
+
+.buttonTimetable{
+    background-image: url('terminarz.jpg');
+    /* background-repeat: no-repeat; */
+    background-position: center;
+    background-size: 101%;
+}
+
+.buttonGallery{
+    background-image: url('daniel-norin-lBhhnhndpE0-unsplash.jpg');
+    /* background-repeat: no-repeat; */
+    background-position: center;
+    background-position-y: -75px;
+    background-size: 100%;
+}
+
+table tbody tr{
+    border-bottom: 1px solid #c0c0c0;
+}
+
+table tbody tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+table tbody tr, table tbody tr td{
+    height: 50px !important;
+    /* line-height: 1px !important; */
+}
+
+table tbody tr td:nth-child(2){
+    text-align: left;
+}
+
+table tbody tr:last-child td:first-child{
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+}
+
+table tbody tr:last-child td:last-child{
+    border-bottom-right-radius: 0.75rem;
+}
+
+/* .swiper {
+    width: 70%; */
+    /* height: 100%;
+  } */
+
+/* .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  } */
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+/* .footer{
+    background-image: url(footer.jpg);
+    background-size: cover;
+    background-position-y: -445px;
+} */
