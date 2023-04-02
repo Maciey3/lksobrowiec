@@ -87,90 +87,14 @@
                 </tr>
             </thead>
             <tbody class="text-md uppercase">
-                <tr>
-                    <td class="">1</td>
-                    <td class="">LKS Obrowiec</td>
-                    <td class="">12</td>
-                    <td class="">12</td>
-                </tr>
-                <tr class="text-sky-400">
-                    <td>2</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>3</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
-                <tr class="">
-                    <td>4</td>
-                    <td>LKS Obrowiec</td>
-                    <td>12</td>
-                    <td>12</td>
-                </tr>
+                @for ($i = 1; $i < 15; $i++)
+                    <tr @class(['text-sky-500' => $i == 2])>
+                        <td class="">{{$i}}</td>
+                        <td class="">LKS Obrowiec</td>
+                        <td class="">12</td>
+                        <td class="">12</td>
+                    </tr>
+                @endfor
             </tbody>
         </table>
         
