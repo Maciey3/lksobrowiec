@@ -15,6 +15,20 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 </head>
 <body class="px-24">
+    <!-- Admin Panel -->
+    @auth
+        <div class="fixed h-8 w-full top-0 left-0 px-12 flex bg-zinc-900/70 text-white items-center justify-between z-50">
+            <div>
+                <a class="px-2" href="{{route('dashboard')}}">Panel</a>
+                <a class="px-2" href="#">Dodaj Post</a>
+                <a class="px-2" href="#">Uzupełnij tabele</a>
+            </div>
+            <div>
+                Admin
+                <a class="text-sm text-pink-300" href="#">[Wyloguj]</a>
+            </div>
+        </div>
+    @endauth
     <!-- Logo -->
     <div class="w-full h-[8vw] mt-4 mb-8 flex justify-center">
         <a href="">
