@@ -101,14 +101,15 @@
                 </tr>
             </thead>
             <tbody class="text-md uppercase">
-                @for ($i = 1; $i < 15; $i++)
-                    <tr @class(['text-sky-500' => $i == 2])>
-                        <td class="">{{$i}}</td>
-                        <td class="">LKS Obrowiec</td>
-                        <td class="">12</td>
-                        <td class="">12</td>
+                @foreach ($teams as $key => $team)
+                {{-- @dd($team) --}}
+                    <tr @class(['text-sky-500' => $team->team->name == 'LKS OBROWIEC'])>
+                        <td class="">{{$key+1}}</td>
+                        <td class="">{{$team->team->name}}</td>
+                        <td class="">{{$team->matches}}</td>
+                        <td class="">{{$team->points}}</td>
                     </tr>
-                @endfor
+                @endforeach
             </tbody>
         </table>
         

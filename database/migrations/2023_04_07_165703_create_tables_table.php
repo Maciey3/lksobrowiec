@@ -16,8 +16,12 @@ return new class extends Migration
         Schema::create('tables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('teamId');
-            $table->integer('points');
+            $table->integer('matches')->default(0);
+            $table->integer('points')->default(0);
             $table->string('season', 9);
+            $table->timestamps();
+
+            $table->foreign('teamId')->references('id')->on('teams');
         });
     }
 
