@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64);
+            $table->string('image', 128)->default('default-team.png');
             $table->timestamps();
         });
     }

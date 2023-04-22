@@ -1,53 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Swiper -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-</head>
-<body class="px-24">
-    <!-- Admin Panel -->
-    @auth
-        <div class="fixed h-8 w-full top-0 left-0 px-12 flex bg-zinc-900/70 text-white items-center justify-between z-50">
-            <div>
-                <a class="px-2" href="{{route('dashboard')}}">Panel</a>
-                <a class="px-2" href="#">Dodaj Post</a>
-                <a class="px-2" href="#">Uzupełnij tabele</a>
-            </div>
-            <div>
-                Admin
-                <a class="text-sm text-pink-300" href="#">[Wyloguj]</a>
-            </div>
-        </div>
-    @endauth
-    <!-- Logo -->
-    <div class="w-full h-[8vw] mt-4 mb-8 flex justify-center">
-        <a href="">
-            <img class="h-[8vw]" src="{{asset('storage/obrowiec.png')}}" />
-        </a>
-    </div>
-    <!-- bg1 -->
-    <img class="w-full absolute z-[-1] left-0 top-[10vw] overflow-x-hidden select-none" src="{{asset('storage/bg4.png')}}"/>
+@extends('layouts.main')
 
-    <!-- Nav -->
-    <nav class="w-full flex justify-center content-center text-center gap-24">
-        <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Home</a>
-        <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Klub</a>
-        <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Rozgrywki</a>
-        <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Galeria</a>
-        <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Partnerzy</a>
-    </nav>
+@section('content')
+
     <!-- Carousel -->
-    <div class="w-full h-[30rem] mt-12 grid grid-cols-2 justify-center text-center gap-4">
+    <div class="w-full h-[30rem] grid grid-cols-2 justify-center text-center gap-4">
         <div class="relative w-[40vw] justify-self-end rounded-xl big-shadow">
             <a href="">
                 <div class="flex absolute w-full h-full px-4 justify-center items-center flex-col">
@@ -135,8 +91,7 @@
             </a>
         </div>
     </div>
-    <!-- bg2 -->
-    <img class="w-full absolute z-[-2] left-0 top-[1540px] select-none" src="{{asset('storage/bg_auto_x2_cut.jpg')}}"/>
+    
     <!-- Sponsorzy i mecze -->
     <div class="w-full mt-48 grid grid-cols-2 justify-items-center items-center justify-center text-center gap-4">
         <div class="h-[500px] w-84 grid grid-rows-2 justify-center items-center justify-items-center rounded-xl big-shadow bg-white">
@@ -145,7 +100,7 @@
         </div>
 
         <div class="grid grid-cols-1 gap-24">
-            <div class="min-[2000px]:w-9/12 w-full rounded-xl big-shadow uppercase bg-white">
+            <div class="rounded-xl big-shadow uppercase bg-white">
                 <div class="w-full py-2 pl-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
                     Nadchodzący mecz
                 </div>
@@ -154,17 +109,17 @@
                 </div>
                 <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                     <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/obrowiec.png')}}" />
+                        <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->homeTeam->image)}}" />
                     </div>
                     <div class="text-sky-400 font-bold text-4xl row-span-2">
                         VS
                     </div>
                     <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/obrowiec.png')}}" />
+                        <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->awayTeam->image)}}" />
                     </div>
-                    <p class="py-4 text-xl font-bold">LKS Obrowiec</p>
+                    <p class="py-4 text-xl font-bold">{{$nextMatch->homeTeam->name}}</p>
                     <!-- <p class="py-4 text-xl font-bold">Pogoda:<br> <i class="fa-solid fa-cloud-sun"></i></p> -->
-                    <p class="py-4 text-xl font-bold">KS CHRZĄSZCZ CHRZĄSZCZYCE</p>
+                    <p class="py-4 text-xl font-bold">{{$nextMatch->awayTeam->name}}</p>
                 </div>
                 <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
                     <p class="text-white">Pozostało</p>
@@ -172,26 +127,40 @@
                 </div>
             </div>
 
-            <div class="min-[2000px]:w-9/12 w-full rounded-xl big-shadow uppercase bg-white">
+            <div class="w-full rounded-xl big-shadow uppercase bg-white">
                 <div class="w-full py-2 pl-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
                     Ostatni mecz
                 </div>
                 <div class="w-56 relative m-auto top-12 font-bold text-md">
-                    Sobota, <span class="text-green-500">28.02.2023</span> 15:00
+                    Sobota, 
+                    <span @class([
+                        'text-green-500' => $lastMatch->state == 'WYGRANA',
+                        'text-red-500' => $lastMatch->state == 'PRZEGRANA',
+                        'text-yellow-500' => $lastMatch->state == 'REMIS',
+                    ])>
+                        28.02.2023
+                    </span> 15:00
                 </div>
                 <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                     <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/obrowiec.png')}}" />
+                        <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->homeTeam->image)}}" />
                     </div>
                     <div class="text-sky-400 font-bold text-4xl self-end">
-                        3:2
+                        {{$lastMatch->homeGoals}}:{{$lastMatch->awayGoals}}
                     </div>
                     <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/obrowiec.png')}}" />
+                        <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->awayTeam->image)}}" />
                     </div>
-                    <p class="py-4 text-xl font-bold">LKS Obrowiec</p>
-                    <p class="text-xl font-bold text-green-500">Wygrana</p>
-                    <p class="py-4 text-xl font-bold">KS CHRZĄSZCZ CHRZĄSZCZYCE</p>
+                    <p class="py-4 text-xl font-bold">{{$lastMatch->homeTeam->name}}</p>
+                    <p @class([
+                        'text-xl font-bold',
+                        'text-green-500' => $lastMatch->state == 'WYGRANA',
+                        'text-red-500' => $lastMatch->state == 'PRZEGRANA',
+                        'text-yellow-500' => $lastMatch->state == 'REMIS',
+                    ])>
+                        {{$lastMatch->state}}
+                    </p>
+                    <p class="py-4 text-xl font-bold">{{$lastMatch->awayTeam->name}}</p>
                 </div>
                 <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
                     <p class="text-white">&nbsp;</p>
@@ -233,24 +202,19 @@
         </div>
         <div class="swiper-pagination"></div>
     </div>
-    <!-- Footer -->
-    <div class="footer absolute left-0 h-[400px] w-full mt-24 bg-zinc-900">
-        <!-- <img class="absolute left-0 w-full" src="footer.jpg" /> -->
-        <!-- <a href="">
-            <img class="h-[8vw] m-auto" src="obrowiec.png" />
-        </a> -->
-    </div>
+@endsection
 
+@section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script>
         var swiper = new Swiper(".mySwiper", {
-          slidesPerView: 1,
-          spaceBetween: 100,
-          pagination: {
+        slidesPerView: 1,
+        spaceBetween: 100,
+        pagination: {
             el: ".swiper-pagination",
             clickable: true,
-          },
-          breakpoints: {
+        },
+        breakpoints: {
             // when window width is >= 320px
             // 1200: {
             // slidesPerView: 2,
@@ -262,6 +226,5 @@
             }
         },
         });
-      </script>
-</body>
-</html>
+    </script>
+@endsection

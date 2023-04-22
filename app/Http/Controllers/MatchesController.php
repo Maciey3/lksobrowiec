@@ -45,19 +45,29 @@ class MatchesController extends Controller
 
                 $homeTeam = explode($walkower, $cells[1]->nodeValue)[0];
                 $awayTeam = explode($walkower, $cells[2]->nodeValue)[0];
+
+                $result = explode(':', $cells[5]->nodeValue);
+                $homeGoals = ($result[0] == '') ? NULL : $result[0];
+                $awayGoals = $result[1] ?? NULL;
+
                 $date = $cells[3]->nodeValue . ' ' . $cells[4]->nodeValue;
 
                 $matches[] = [
                     'homeTeam' => $homeTeam,
                     'awayTeam' => $awayTeam,
+                    'homeGoals' => $homeGoals,
+                    'awayGoals' => $awayGoals,
                     'date' => $date
                 ];
             }
         }
 
         foreach ($matches as $match) {
+            // dd($match);
             $homeTeam = $match['homeTeam'];
             $awayTeam = $match['awayTeam'];
+            $homeGoals = $match['homeGoals'];
+            $awayGoals = $match['awayGoals'];
             $date = $match['date'];
 
             $homeId = Team::where('name', $homeTeam)
@@ -79,10 +89,11 @@ class MatchesController extends Controller
                 ->firstOrCreate([
                     'teamHomeId' => $homeId,
                     'teamAwayId' => $awayId,
+                    'homeGoals' => $homeGoals,
+                    'awayGoals' => $awayGoals,
                     'date' => $date,
                     'season' => $currentSeason
                 ]);
-            // In future result update
         }
 
         dd($matches);
