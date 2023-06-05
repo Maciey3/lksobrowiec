@@ -22,6 +22,8 @@
                 <a class="px-2" href="{{route('dashboard')}}">Panel</a>
                 <a class="px-2" href="#">Dodaj Post</a>
                 <a class="px-2" href="#">Uzupełnij tabele</a>
+                <a class="px-2" href="#">Dodaj Gracza</a>
+                <a class="px-2" href="#">Dodaj Mecz</a>
             </div>
             <div>
                 Admin

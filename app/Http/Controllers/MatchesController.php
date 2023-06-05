@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DOMDocument;
 use App\Models\Team;
 use App\Models\LksMatch;
+use Carbon\Carbon;
 
 class MatchesController extends Controller
 {
@@ -89,13 +90,96 @@ class MatchesController extends Controller
                 ->firstOrCreate([
                     'teamHomeId' => $homeId,
                     'teamAwayId' => $awayId,
-                    'homeGoals' => $homeGoals,
-                    'awayGoals' => $awayGoals,
                     'date' => $date,
                     'season' => $currentSeason
+                ],
+                [
+                    'homeGoals' => $homeGoals,
+                    'awayGoals' => $awayGoals
                 ]);
         }
-
+        // POPRAWIĆ DODAWANIE WYNIKÓW, Z TEGO POWODU ŻE WYNIKI SIĘ NIE NADPISUJĄ
         dd($matches);
+    }
+
+    static public function getLastMatch() : LksMatch {
+        $now = Carbon::now()->toDateTimeString();
+        // dd($now);
+        $lastMatch = LkSMatch::where('date', '<', $now)
+            // ->whereNotNull(['homeGoals', 'awayGoals'])
+            ->orderBy('date', 'desc')
+            ->first();
+
+        if($lastMatch){
+            $home = $lastMatch->homeTeam->name;
+            $away = $lastMatch->awayTeam->name;
+            $homeGoals = $lastMatch->homeGoals;
+            $awayGoals = $lastMatch->awayGoals;
+        
+            if($home == 'LKS OBROWIEC'){
+                $team = 1;
+            }
+            elseif($away == 'LKS OBROWIEC'){
+                $team = 2;
+            }
+        
+            if(($homeGoals > $awayGoals && $team == 1) || ($homeGoals < $awayGoals && $team == 2)){
+                $lastMatch->state = "WYGRANA";
+            }
+            elseif(($homeGoals < $awayGoals && $team == 1) || ($homeGoals > $awayGoals && $team == 2)){
+                $lastMatch->state = "PRZEGRANA";
+            }
+            elseif($homeGoals == $awayGoals && $homeGoals !== NULL && $awayGoals !== NULL){
+                $lastMatch->state = "REMIS";
+            }
+        }
+        return $lastMatch;
+    }
+
+    static public function getNextMatch() : LksMatch {
+        $now = Carbon::now()->toDateTimeString();
+        $nowSubMatch = Carbon::now()->subMinute(110)->toDateTimeString();
+        $nextMatch = LkSMatch::where('date', '>', $nowSubMatch)
+        ->whereNull(['homeGoals', 'awayGoals'])
+        ->orderBy('date', 'asc')
+        ->first();
+
+        if($nextMatch){
+            $matchDate = Carbon::parse($nextMatch->date);
+            if($matchDate < $now){
+                $nextMatch->timeLeft = ['status' => 'live'];
+                $counter = $matchDate->diffInMinutes($now);
+                if($counter < 46){
+                    $nextMatch->live = $counter . '\'';
+                }
+                elseif($counter > 46 && $counter < 61){
+                    $nextMatch->live = 'PRZERWA';
+                }
+                elseif($counter > 61){
+                    $nextMatch->live = $counter-15 . '\'';
+                }
+                elseif($counter > 90){
+                    $nextMatch->live = 90 . '\'';
+                }
+                
+            }
+            else{
+                $counter = $matchDate->diffInMinutes($now);
+                $minutes = $counter%60;
+                $counter = intdiv($counter, 60);
+                $hours = $counter%24;
+                $counter = intdiv($counter, 24);
+                $days = $counter;
+            
+                $nextMatch->timeLeft = [
+                    'status' => 'remaining',
+                    'days' => $days . 'D',
+                    'hours' => $hours . "H",
+                    'minutes' => $minutes . 'M'
+                ];
+            }
+        }
+
+        return $nextMatch;
     }
 }

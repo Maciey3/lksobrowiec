@@ -98,107 +98,114 @@
             <img class="w-1/2" src="{{asset('storage/beno.jpg')}}" />
             <img class="w-1/2" src="{{asset('storage/interget.png')}}" />
         </div>
-
+        
         <div class="grid grid-cols-1 gap-24">
-            <div class="rounded-xl big-shadow uppercase bg-white">
-                <div class="w-full py-2 pl-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
-                    Nadchodzący mecz
-                </div>
-                <div class="w-56 relative m-auto top-12 font-bold text-md">
-                    Sobota, <span class="text-green-500">28.02.2023</span> 15:00
-                </div>
-                <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
-                    <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->homeTeam->image)}}" />
+            @if($nextMatch)
+                <div class="rounded-xl big-shadow uppercase bg-white">
+                    <div class="w-full flex justify-between py-2 px-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
+                        <p>Nadchodzący mecz</p>
+                        @auth
+                            <a href="#" class="hover:text-sky-400">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        @endauth
                     </div>
-                    <div class="text-sky-400 font-bold text-4xl row-span-2">
-                        VS
+                    <div class="w-56 relative m-auto top-12 font-bold text-md">
+                        Sobota, <span class="text-sky-400">28.02.2023</span> 15:00
                     </div>
-                    <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->awayTeam->image)}}" />
+                    <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
+                        <div class="w-full text-center">
+                            <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->homeTeam->image)}}" />
+                        </div>
+                        <div class="text-sky-400 font-bold text-4xl row-span-2">
+                            VS
+                        </div>
+                        <div class="w-full text-center">
+                            <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->awayTeam->image)}}" />
+                        </div>
+                        <p class="py-4 text-xl font-bold">{{$nextMatch->homeTeam->name}}</p>
+                        <!-- <p class="py-4 text-xl font-bold">Pogoda:<br> <i class="fa-solid fa-cloud-sun"></i></p> -->
+                        <p class="py-4 text-xl font-bold">{{$nextMatch->awayTeam->name}}</p>
                     </div>
-                    <p class="py-4 text-xl font-bold">{{$nextMatch->homeTeam->name}}</p>
-                    <!-- <p class="py-4 text-xl font-bold">Pogoda:<br> <i class="fa-solid fa-cloud-sun"></i></p> -->
-                    <p class="py-4 text-xl font-bold">{{$nextMatch->awayTeam->name}}</p>
+                    <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
+                        <p class="text-white">Pozostało</p>
+                        @if($nextMatch->timeLeft['status'] == 'live')
+                            <p class="text-red-500">
+                                <i class="align-middle text-sm fa-solid fa-circle fa-beat"></i> {{$nextMatch->live}}
+                            </p>
+                        @else
+                            <p class="text-white">
+                                {{$nextMatch->timeLeft['days']}} <span class="text-sky-400">{{$nextMatch->timeLeft['hours']}}</span> {{$nextMatch->timeLeft['minutes']}}
+                            </p>
+                        @endisset
+                    </div>
                 </div>
-                <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
-                    <p class="text-white">Pozostało</p>
-                    <p class="text-white">1D <span class="text-sky-400">2H</span> 13M</p>
-                </div>
-            </div>
+            @endif
 
-            <div class="w-full rounded-xl big-shadow uppercase bg-white">
-                <div class="w-full py-2 pl-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
-                    Ostatni mecz
-                </div>
-                <div class="w-56 relative m-auto top-12 font-bold text-md">
-                    Sobota, 
-                    <span @class([
-                        'text-green-500' => $lastMatch->state == 'WYGRANA',
-                        'text-red-500' => $lastMatch->state == 'PRZEGRANA',
-                        'text-yellow-500' => $lastMatch->state == 'REMIS',
-                    ])>
-                        28.02.2023
-                    </span> 15:00
-                </div>
-                <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
-                    <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->homeTeam->image)}}" />
+            @if($lastMatch)
+                <div class="w-full rounded-xl big-shadow uppercase bg-white">
+                    <div class="w-full flex justify-between py-2 px-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
+                        <p>Ostatni mecz</p>
+                        @auth
+                            <a href="#" class="hover:text-sky-400">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        @endauth
                     </div>
-                    <div class="text-sky-400 font-bold text-4xl self-end">
-                        {{$lastMatch->homeGoals}}:{{$lastMatch->awayGoals}}
+                    <div class="w-56 relative m-auto top-12 font-bold text-md">
+                        Sobota, 
+                        <span @class([
+                            'text-green-500' => $lastMatch->state == 'WYGRANA',
+                            'text-red-500' => $lastMatch->state == 'PRZEGRANA',
+                            'text-yellow-500' => $lastMatch->state == 'REMIS',
+                        ])>
+                            28.02.2023
+                        </span> 15:00
                     </div>
-                    <div class="w-full text-center">
-                        <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->awayTeam->image)}}" />
+                    <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
+                        <div class="w-full text-center">
+                            <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->homeTeam->image)}}" />
+                        </div>
+                        <div class="text-sky-400 font-bold text-4xl self-end">
+                            {{$lastMatch->homeGoals}}:{{$lastMatch->awayGoals}}
+                        </div>
+                        <div class="w-full text-center">
+                            <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->awayTeam->image)}}" />
+                        </div>
+                        <p class="py-4 text-xl font-bold">{{$lastMatch->homeTeam->name}}</p>
+                        <p @class([
+                            'text-xl font-bold',
+                            'text-green-500' => $lastMatch->state == 'WYGRANA',
+                            'text-red-500' => $lastMatch->state == 'PRZEGRANA',
+                            'text-yellow-500' => $lastMatch->state == 'REMIS',
+                        ])>
+                            {{$lastMatch->state}}
+                        </p>
+                        <p class="py-4 text-xl font-bold">{{$lastMatch->awayTeam->name}}</p>
                     </div>
-                    <p class="py-4 text-xl font-bold">{{$lastMatch->homeTeam->name}}</p>
-                    <p @class([
-                        'text-xl font-bold',
-                        'text-green-500' => $lastMatch->state == 'WYGRANA',
-                        'text-red-500' => $lastMatch->state == 'PRZEGRANA',
-                        'text-yellow-500' => $lastMatch->state == 'REMIS',
-                    ])>
-                        {{$lastMatch->state}}
-                    </p>
-                    <p class="py-4 text-xl font-bold">{{$lastMatch->awayTeam->name}}</p>
+                    <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
+                        <p class="text-white">&nbsp;</p>
+                        <!-- <p class="text-white">1D <span class="text-sky-400">2H</span> 13M</p> -->
+                    </div>
                 </div>
-                <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
-                    <p class="text-white">&nbsp;</p>
-                    <!-- <p class="text-white">1D <span class="text-sky-400">2H</span> 13M</p> -->
-                </div>
-            </div>
+            @endif
         </div>
     </div>
     <!-- Strzelcy -->
     <div class="swiper mySwiper min-[2000px]:w-9/12 w-11/12 h-[400px] mt-48 py-4 px-12">
         <div class="swiper-wrapper flex fustify-center">
-            <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
-                <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                    <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
+            @for ($i=0; $i<4; $i++)
+                <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
+                    <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
+                        <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
+                    </div>
+                    <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
+                        <p class="text-4xl uppercase text-sky-500 border-">20 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
+                        <p class="text-3xl">{{$player->name}}</p>
+                    </div>
                 </div>
-                <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
-                    <p class="text-4xl uppercase text-sky-500 border-">20 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
-                    <p class="text-3xl">Michał Derda</p>
-                </div>
-            </div>
-            <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
-                <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                    <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
-                </div>
-                <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
-                    <p class="text-4xl uppercase text-sky-500 border-">18 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
-                    <p class="text-3xl">Maciej Chromiński</p>
-                </div>
-            </div>
-            <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
-                <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                    <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
-                </div>
-                <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
-                    <p class="text-4xl uppercase text-sky-500 border-">10 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
-                    <p class="text-3xl">Wiktor Gebauer</p>
-                </div>
-            </div>
+            @endfor
+            
         </div>
         <div class="swiper-pagination"></div>
     </div>
