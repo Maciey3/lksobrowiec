@@ -13,18 +13,15 @@
         <!-- Swiper -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.0-rc.4/dist/css/tom-select.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0-rc.4/dist/js/tom-select.complete.min.js"></script>
     </head>
     <body class="px-24">
         <!-- Admin Panel -->
+        <div class="w-full h-full absolute top-0 left-0 opacity-50 z-[-1] bg-[url('{{asset('storage/obrowiec.png')}}')] bg-center bg-no-repeat"></div>
         @auth
             @include('layouts.adminNavigation')
         @endauth
-
-        @include('layouts.navigation')
-        <!-- bg1 -->
-        <img class="w-full absolute z-[-1] left-0 top-[10vw] overflow-x-hidden select-none" src="{{asset('storage/bg4.png')}}"/>
-        <!-- bg2 -->
-        <img class="w-full absolute z-[-2] left-0 top-[1540px] select-none" src="{{asset('storage/bg_auto_x2_cut.jpg')}}"/>
         <div class="content min-h-screen mt-12">
             @yield('content')
         </div>

@@ -84,6 +84,8 @@ Route::get('/createPlayer', function(){
     dd($player);
 });
 
+Route::get('/match/edit/{id}', [MatchesController::class, 'edit']);
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

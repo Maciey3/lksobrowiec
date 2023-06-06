@@ -11,6 +11,12 @@ use Carbon\Carbon;
 
 class MatchesController extends Controller
 {
+    public function edit($id){
+        $match = LksMatch::where('id', $id)->firstOrFail();
+        return view('admin.match.edit', ['match' => $match]);
+    }
+
+
     public function scrapMatches(){
         $currentSeason = '2022/2023';
         $targetClass = 'tabela-terminarz';
