@@ -147,7 +147,7 @@
                     <div class="w-full flex justify-between py-2 px-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
                         <p>Ostatni mecz</p>
                         @auth
-                            <a href="#" class="hover:text-sky-400">
+                            <a href="{{route('match.edit', ['id' => $lastMatch->id])}}" class="hover:text-sky-400">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </a>
                         @endauth
@@ -194,7 +194,18 @@
     <!-- Strzelcy -->
     <div class="swiper mySwiper min-[2000px]:w-9/12 w-11/12 h-[400px] mt-48 py-4 px-12">
         <div class="swiper-wrapper flex fustify-center">
-            @for ($i=0; $i<4; $i++)
+            @foreach ($goals as $goal)
+                <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
+                    <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
+                        <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
+                    </div>
+                    <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
+                        <p class="text-4xl uppercase text-sky-500 border-">{{$goal->quantity}} <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
+                        <p class="text-3xl">{{$goal->player->name}}</p>
+                    </div>
+                </div>
+            @endforeach
+            {{-- @for ($i=0; $i<4; $i++)
                 <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
                     <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
                         <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
@@ -204,7 +215,7 @@
                         <p class="text-3xl">{{$player->name}}</p>
                     </div>
                 </div>
-            @endfor
+            @endfor --}}
             
         </div>
         <div class="swiper-pagination"></div>

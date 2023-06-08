@@ -9,6 +9,7 @@ use App\Http\Controllers\MatchesController;
 use App\Models\Table;
 use App\Models\Player;
 use App\Models\LkSMatch;
+use App\Models\Goal;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +30,17 @@ Route::get('/', function () {
 
     $lastMatch = MatchesController::getLastMatch();
     $nextMatch = MatchesController::getNextMatch();
-    $player = Player::where('name', 'Maciej Chromiński')->first();
+    $goals = Goal::take(3)
+        ->groupBy('playerId')
+        ->selectRaw('playerId, count(*) as quantity')
+        ->orderBy('quantity', 'desc')
+        ->get();
 
     return view('index', [
         'teams' => $teams,
         'lastMatch' => $lastMatch,
         'nextMatch' => $nextMatch,
-        'player' => $player
+        'goals' => $goals
     ]);
 })->name('home');
 
@@ -77,14 +82,21 @@ Route::get('/updateTable', [TableController::class, 'scrapTable']);
 Route::get('/updateMatches', [MatchesController::class, 'scrapMatches']);
 
 Route::get('/createPlayer', function(){
+    $random = rand(1,9999);
     $player = Player::create([
-        'name' => 'Maciej Chromiński',
+        'name' => "Maciej Chromiński {$random}",
         'birthday' => '2001.02.11'
     ]);
     dd($player);
 });
 
-Route::get('/match/edit/{id}', [MatchesController::class, 'edit']);
+Route::controller(MatchesController::class)
+    ->name('match.')
+    ->group(function(){
+        Route::get('/match/edit/{id}', 'edit')->name('edit');
+        Route::post('/match/update/{id}', 'update')->name('update');
+    }
+);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -7,13 +7,45 @@ use Illuminate\Http\Request;
 use DOMDocument;
 use App\Models\Team;
 use App\Models\LksMatch;
+use App\Models\Player;
+use App\Models\Goal;
 use Carbon\Carbon;
 
 class MatchesController extends Controller
 {
     public function edit($id){
         $match = LksMatch::where('id', $id)->firstOrFail();
-        return view('admin.match.edit', ['match' => $match]);
+        $players = Player::get();
+        // dd($players);
+        return view('admin.match.edit', [
+            'id' => $id,
+            'match' => $match,
+            'players' => $players
+        ]);
+    }
+
+    public function update(Request $request, $id){
+        $players = $request->players;
+        $quantities = $request->quantities;
+        for($i=0; $i<count($players); $i++){
+            if(!$players[$i] && !$quantities[$i]){
+                continue;
+            }
+            $goals[$i] = [
+                'name' => $players[$i],
+                'quantity' => $quantities[$i],
+            ];
+        }
+        
+        foreach ($goals as $goal){
+            $player = Player::where('name', $goal['name'])->firstOrFail();
+            Goal::create([
+                'matchId' => $id,
+                'playerId' => $player->id,
+                'quantity' => $goal['quantity']
+            ]);
+        }
+        dd(1);
     }
 
 

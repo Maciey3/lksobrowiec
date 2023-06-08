@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('players', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 64);
-            $table->date('birthday')->nullable();
-            $table->string('image', 128)->default('profile.png');
+            $table->unsignedBigInteger('matchId');
+            $table->unsignedBigInteger('playerId');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('players');
+        Schema::dropIfExists('goals');
     }
 };
