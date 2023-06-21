@@ -111,7 +111,7 @@
                         @endauth
                     </div>
                     <div class="w-56 relative m-auto top-12 font-bold text-md">
-                        Sobota, <span class="text-sky-400">28.02.2023</span> 15:00
+                        {{$nextMatch->strDate['day']}}, <span class="text-sky-400">{{$nextMatch->strDate['date']}}</span> {{$nextMatch->strDate['time']}}
                     </div>
                     <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                         <div class="w-full text-center">
@@ -153,14 +153,15 @@
                         @endauth
                     </div>
                     <div class="w-56 relative m-auto top-12 font-bold text-md">
-                        Sobota, 
+                        {{$lastMatch->strDate['day']}},
+                        {{-- Sobota,  --}}
                         <span @class([
                             'text-green-500' => $lastMatch->state == 'WYGRANA',
                             'text-red-500' => $lastMatch->state == 'PRZEGRANA',
                             'text-yellow-500' => $lastMatch->state == 'REMIS',
                         ])>
-                            28.02.2023
-                        </span> 15:00
+                        {{$lastMatch->strDate['date']}}
+                        </span> {{$lastMatch->strDate['time']}}
                     </div>
                     <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                         <div class="w-full text-center">
@@ -183,8 +184,19 @@
                         </p>
                         <p class="py-4 text-xl font-bold">{{$lastMatch->awayTeam->name}}</p>
                     </div>
-                    <div class="w-full py-2 px-4 flex justify-between bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
-                        <p class="text-white">&nbsp;</p>
+                    <div class="w-full py-2 px-4 grid grid-cols-1 gap-4 bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
+                        @if(count($matchGoals))
+                            @foreach ($matchGoals as $goal)
+                                <p class="py-1 text-white"> {{$goal->player->name}}
+                                @php
+                                    echo str_repeat("<i class='relative text-green-500 bottom-0 text-2xl fa-solid fa-futbol px-1'></i>", $goal->quantity);
+                                @endphp
+                                </p>
+                            @endforeach
+                        @else
+                            <p class="py-1 text-white">&nbsp;a</p>
+                        @endif
+                        {{-- <p class="text-white">&nbsp;</p> --}}
                         <!-- <p class="text-white">1D <span class="text-sky-400">2H</span> 13M</p> -->
                     </div>
                 </div>

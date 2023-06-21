@@ -28,18 +28,20 @@ Route::get('/', function () {
         ->orderBy('points', 'desc')
         ->get();
 
-    $lastMatch = MatchesController::getLastMatch();
+    list($lastMatch, $matchGoals) = MatchesController::getLastMatch();
     $nextMatch = MatchesController::getNextMatch();
     $goals = Goal::take(3)
         ->groupBy('playerId')
-        ->selectRaw('playerId, count(*) as quantity')
+        ->selectRaw('playerId, SUM(quantity) as quantity')
         ->orderBy('quantity', 'desc')
         ->get();
+
 
     return view('index', [
         'teams' => $teams,
         'lastMatch' => $lastMatch,
         'nextMatch' => $nextMatch,
+        'matchGoals' => $matchGoals,
         'goals' => $goals
     ]);
 })->name('home');

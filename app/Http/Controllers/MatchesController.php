@@ -24,7 +24,7 @@ class MatchesController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $matchId){
         $players = $request->players;
         $quantities = $request->quantities;
         for($i=0; $i<count($players); $i++){
@@ -32,20 +32,19 @@ class MatchesController extends Controller
                 continue;
             }
             $goals[$i] = [
-                'name' => $players[$i],
+                'player' => $players[$i],
                 'quantity' => $quantities[$i],
             ];
         }
-        
         foreach ($goals as $goal){
-            $player = Player::where('name', $goal['name'])->firstOrFail();
+            $player = Player::where('name', $goal['player'])->firstOrFail();
             Goal::create([
-                'matchId' => $id,
+                'matchId' => $matchId,
                 'playerId' => $player->id,
                 'quantity' => $goal['quantity']
             ]);
         }
-        dd(1);
+        return redirect()->route('home');
     }
 
 
@@ -140,13 +139,16 @@ class MatchesController extends Controller
         dd($matches);
     }
 
-    static public function getLastMatch() : LksMatch {
+    static public function getLastMatch() : Array {
         $now = Carbon::now()->toDateTimeString();
-        // dd($now);
         $lastMatch = LkSMatch::where('date', '<', $now)
             // ->whereNotNull(['homeGoals', 'awayGoals'])
             ->orderBy('date', 'desc')
             ->first();
+        $lastMatch->strDate = MatchesController::formatDate($lastMatch->date);
+
+        $goals = Goal::where('matchId', $lastMatch->id)
+            ->get();
 
         if($lastMatch){
             $home = $lastMatch->homeTeam->name;
@@ -171,7 +173,7 @@ class MatchesController extends Controller
                 $lastMatch->state = "REMIS";
             }
         }
-        return $lastMatch;
+        return [$lastMatch, $goals];
     }
 
     static public function getNextMatch() : LksMatch {
@@ -181,6 +183,8 @@ class MatchesController extends Controller
         ->whereNull(['homeGoals', 'awayGoals'])
         ->orderBy('date', 'asc')
         ->first();
+
+        $nextMatch->strDate = MatchesController::formatDate($nextMatch->date);
 
         if($nextMatch){
             $matchDate = Carbon::parse($nextMatch->date);
@@ -219,5 +223,19 @@ class MatchesController extends Controller
         }
 
         return $nextMatch;
+    }
+
+    static public function formatDate($date){
+        $day = Carbon::parse($date)->locale('pl')->dayName;
+        $date = Carbon::createFromFormat('Y-m-d H:i:s', $date)
+        ->format('d.m.Y H:i');
+        list($date, $time) = explode(' ', $date);
+
+
+        return [
+            'day' => $day,
+            'date' => $date,
+            'time' => $time
+        ];
     }
 }

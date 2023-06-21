@@ -14,11 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('goals', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
             $table->unsignedBigInteger('matchId');
             $table->unsignedBigInteger('playerId');
             $table->integer('quantity');
             $table->timestamps();
+
+            $table->primary(['matchId', 'playerId']);
         });
     }
 

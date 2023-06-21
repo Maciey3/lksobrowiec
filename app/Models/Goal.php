@@ -10,6 +10,10 @@ class Goal extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = ['matchId', 'userId'];
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'matchId',
         'playerId',
