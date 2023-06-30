@@ -145,12 +145,12 @@ class MatchesController extends Controller
             // ->whereNotNull(['homeGoals', 'awayGoals'])
             ->orderBy('date', 'desc')
             ->first();
-        $lastMatch->strDate = MatchesController::formatDate($lastMatch->date);
-
-        $goals = Goal::where('matchId', $lastMatch->id)
-            ->get();
 
         if($lastMatch){
+            $lastMatch->strDate = MatchesController::formatDate($lastMatch->date);
+            $goals = Goal::where('matchId', $lastMatch->id)
+            ->get();
+
             $home = $lastMatch->homeTeam->name;
             $away = $lastMatch->awayTeam->name;
             $homeGoals = $lastMatch->homeGoals;
@@ -173,10 +173,10 @@ class MatchesController extends Controller
                 $lastMatch->state = "REMIS";
             }
         }
-        return [$lastMatch, $goals];
+        return [$lastMatch ?? NULL, $goals ?? NULL];
     }
 
-    static public function getNextMatch() : LksMatch {
+    static public function getNextMatch() : LksMatch|NULL {
         $now = Carbon::now()->toDateTimeString();
         $nowSubMatch = Carbon::now()->subMinute(110)->toDateTimeString();
         $nextMatch = LkSMatch::where('date', '>', $nowSubMatch)
@@ -184,9 +184,9 @@ class MatchesController extends Controller
         ->orderBy('date', 'asc')
         ->first();
 
-        $nextMatch->strDate = MatchesController::formatDate($nextMatch->date);
-
+        
         if($nextMatch){
+            $nextMatch->strDate = MatchesController::formatDate($nextMatch->date);
             $matchDate = Carbon::parse($nextMatch->date);
             if($matchDate < $now){
                 $nextMatch->timeLeft = ['status' => 'live'];

@@ -154,7 +154,6 @@
                     </div>
                     <div class="w-56 relative m-auto top-12 font-bold text-md">
                         {{$lastMatch->strDate['day']}},
-                        {{-- Sobota,  --}}
                         <span @class([
                             'text-green-500' => $lastMatch->state == 'WYGRANA',
                             'text-red-500' => $lastMatch->state == 'PRZEGRANA',
@@ -189,12 +188,12 @@
                             @foreach ($matchGoals as $goal)
                                 <p class="py-1 text-white"> {{$goal->player->name}}
                                 @php
-                                    echo str_repeat("<i class='relative text-green-500 bottom-0 text-2xl fa-solid fa-futbol px-1'></i>", $goal->quantity);
+                                    echo str_repeat("<i class='relative text-sky-300 bottom-0 text-2xl fa-solid fa-futbol px-1'></i>", $goal->quantity);
                                 @endphp
                                 </p>
                             @endforeach
                         @else
-                            <p class="py-1 text-white">&nbsp;a</p>
+                            <p class="py-1 text-white">&nbsp;</p>
                         @endif
                         {{-- <p class="text-white">&nbsp;</p> --}}
                         <!-- <p class="text-white">1D <span class="text-sky-400">2H</span> 13M</p> -->

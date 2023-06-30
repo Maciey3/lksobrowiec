@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\MatchesController;
+use App\Http\Controllers\PlayersController;
 
 use App\Models\Table;
 use App\Models\Player;
@@ -97,6 +98,15 @@ Route::controller(MatchesController::class)
     ->group(function(){
         Route::get('/match/edit/{id}', 'edit')->name('edit');
         Route::post('/match/update/{id}', 'update')->name('update');
+    }
+);
+
+Route::controller(PlayersController::class)
+    ->name('player.')
+    ->group(function(){
+        Route::get('/players', 'index')->name('index');
+        Route::get('/player/{id}', 'show')->name('show');
+        Route::post('/player/update/{id}', 'update')->name('update');
     }
 );
 

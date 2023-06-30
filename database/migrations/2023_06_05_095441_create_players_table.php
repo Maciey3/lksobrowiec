@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 64);
             $table->date('birthday')->nullable();
+            $table->boolean('active')->default(1);
             $table->string('image', 128)->default('profile.png');
             $table->timestamps();
         });
