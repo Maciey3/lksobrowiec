@@ -29,4 +29,8 @@ class Goal extends Model
     {
         return $this->hasOne(Player::class, 'id', 'playerId');
     }
+
+    // public function getFromCurrentSeason(){
+    //     return $this->hasOne(LksMatch::class, 'id', 'matchId')->where('matches.season', '2022/2023');
+    // }
 }

@@ -1,59 +1,71 @@
 @extends('layouts.admin.main')
 
 @section('content')
+    <h1 class="small-shadow rounded-xl w-64 mt-6 mb-4 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">Edytuj mecz<h1>
+    <div class="w-2/5 grid grid-cols-1 gap-8 m-auto justify-center justify-items-center border-2 border-black bg-[#ffffffdd] py-8 px-10 my-2">
+        <form class="contents" action="{{route('match.store')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="w-full flex justify-evenly gap-12">
+                <img class="w-20" src="{{asset('storage/teams/' . $match->homeTeam->image)}}" />
+                <img class="w-20" src="{{asset('storage/teams/' . $match->awayTeam->image)}}" />
+            </div>
+            <div class="flex gap-6">
+                <select class="w-64 h-9 whitespace-nowrap input-shadow" id="select-homeTeam" placeholder="Wybierz drużynę gospodarzy" name="homeTeam" required>
+                    <option></option>
+                    @foreach ($teams as $team)
+                        <option value='{{$team->name}}'
+                            @selected($match->homeTeam->name == $team->name)
+                        >
+                            {{$team->name}}
+                        </option>
+                    @endforeach
+                </select>
 
-    <div class="mt-24 pb-24 w-1/2 bg-[#c3c3c3b2] m-auto text-center">
-        <p class="text-4xl py-8">Dodaj Strzelców</p>
-        <div class="grid grid-cols-[3fr_2fr] justify-center items-center text-center gap-y-6">
-            <form action="{{route('match.update', ['id' => $id])}}" id='goalsForm' class='contents' method="POST" enctype="multipart/form-data">
-                @method('POST')
-                @csrf
-                @for($i=1; $i<9; $i++)
-                    <select id='select-player-{{$i}}' class="searchPlayer w-64 text-red-500 justify-self-end" autocomplete="off" name="players[]">
-                        <option default></option>
-                        @foreach ($players as $player)
-                            <option>{{$player->name}}</option>
-                        @endforeach
-                    </select>
-                    <select class="w-10 h-8 ml-10" name="quantities[]">
-                        <option default></option>
-                        @for($j=1; $j<13; $j++)
-                            <option>{{$j}}</option>
-                        @endfor
-                    </select>
-                @endfor
-            </form>
-        </div>
-        <button onclick="document.getElementById('goalsForm').submit();" type="submit" class="mt-12 h-12 w-1/3 m-auto bg-red-300">Wykonaj<button>
-        {{-- <button onclick="addInput()" class="w-10 h-10 mt-10 rounded-full bg-green-500 text-xl text-white">+</button> --}}
-            
-            
-            
-           <script>
-                // function addInput(){
-                //     let searches = document.querySelectorAll('.searchPlayer');
-                //     let parent = document.getElementById('goalsForm');
-                //     let select = document.getElementById('select-player-1');
-                //     select.id = `select-player-${searches.length + 1}`;
-                //     // console.log(select);
-                //     parent.appendChild(select);
-                //     init();
-                // }
-                // let a = 1;
-                let searches = document.querySelectorAll('.searchPlayer');
-                console.log(searches.length);
-                for (let i = 1; i < searches.length+1; i++) {
-                    new TomSelect(`#select-player-${i}` ,{
-                        create: false,
-                        sortField: {
-                            field: "text"
-                            // direction: "asc"
-                        }
-                    });
-                }
+                <select class="w-64 h-9 whitespace-nowrap input-shadow" id="select-awayTeam" placeholder="Wybierz drużynę gości" name="awayTeam" required>
+                    <option></option>
+                    @foreach ($teams as $team)
+                    <option value='{{$team->name}}'
+                        @selected($match->awayTeam->name == $team->name)
+                    >
+                        {{$team->name}}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
 
-           </script>
-            
-        {{-- </div> --}}
+            <div class="flex gap-2">
+                <input class="w-16 h-9 px-2 border border-gray-300 rounded-sm input-shadow text-center" type="number" value={{$match->homeGoals}}>
+                <span class="flex items-center h-9 px-2 font-bold">:</span>
+                <input class="w-16 h-9 px-2 border border-gray-300 rounded-sm input-shadow text-center" type="number" value={{$match->awayGoals}}>
+            </div>
+
+            <select class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow text-center" name="type" required>
+                <option class="text-gray-400" selected disabled>Wybierz rodzaj meczu</option>
+                <option>Sparing</option>
+                <option>Puchar</option>
+                <option>Liga</option>
+            </select>
+
+            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow text-center" type="date" placeholder="Data urodzin" value="{{$date['day']}}" name="date" required>
+
+            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow text-center" type="time" placeholder="Data urodzin" value="{{$date['time']}}" name="time" required>
+
+            <button type="submit" class="text-white bg-green-500 rounded-xl py-2 px-4">
+                Utwórz
+            </button>
+        </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        new TomSelect('#select-homeTeam',{
+            create: true,
+        });
+
+        new TomSelect('#select-awayTeam',{
+            create: true,
+        });
+    </script>
+
 @endsection

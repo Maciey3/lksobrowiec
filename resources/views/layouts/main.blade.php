@@ -13,6 +13,7 @@
         <!-- Swiper -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+        @yield('style')
     </head>
     <body class="px-24">
         <!-- Admin Panel -->
@@ -22,9 +23,12 @@
 
         @include('layouts.navigation')
         <!-- bg1 -->
-        <img class="w-full absolute z-[-1] left-0 top-[10vw] overflow-x-hidden select-none" src="{{asset('storage/bg4.png')}}"/>
+        @yield('bg1')
+        {{-- <img class="w-full absolute z-[-1] left-0 top-[10vw] overflow-x-hidden select-none" src="{{asset('storage/bg4.png')}}"/> --}}
         <!-- bg2 -->
-        <img class="w-full absolute z-[-2] left-0 top-[1540px] select-none" src="{{asset('storage/bg_auto_x2_cut.jpg')}}"/>
+        @yield('bg2')
+        {{-- <img class="w-full absolute z-[-2] left-0 top-[1540px] select-none" src="{{asset('storage/bg_auto_x2_cut.jpg')}}"/> --}}
+        
         <div class="content min-h-screen mt-12">
             @yield('content')
         </div>

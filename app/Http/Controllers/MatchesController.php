@@ -13,20 +13,113 @@ use Carbon\Carbon;
 
 class MatchesController extends Controller
 {
+    public function index(){
+        $matches = LksMatch::get();
+
+        return view('admin.match.matches', [
+            'matches' => $matches
+        ]);
+    }
+
+    public function create(){
+        $teams = Team::get();
+        return view('admin.match.create', [
+            'teams' => $teams
+        ]);
+    }
+
+    public function store(Request $request){
+        $homeTeam = Team::where('name', $request['homeTeam'])
+            ->firstOrCreate([
+                'name' => $request['homeTeam']
+            ]);
+        $awayTeam = Team::where('name', $request['awayTeam'])
+            ->firstOrCreate([
+                'name' => $request['awayTeam']
+            ]);
+        
+        $date = $request['date'] . " " . $request['time'];
+        
+        LksMatch::create([
+            'teamHomeId' => $homeTeam->id,
+            'teamAwayId' => $awayTeam->id,
+            'date' => $date,
+            'season' => env('CURRENT_SEASON')
+        ]);
+
+        return redirect()->route('match.index');
+    }
+
     public function edit($id){
+        $teams = Team::get();
+        $match = LksMatch::where('id', $id)
+            ->firstOrFail();
+        
+        $splitted = explode(' ', $match->date);
+
+        $date = [
+            'day' => $splitted[0],
+            'time' => $splitted[1]
+        ];
+
+        return view('admin.match.edit', [
+            'teams' => $teams,
+            'match' => $match,
+            'date' => $date
+        ]);
+    }
+
+    public function editGoals($id){
         $match = LksMatch::where('id', $id)->firstOrFail();
         $players = Player::get();
-        // dd($players);
-        return view('admin.match.edit', [
+
+        $goals = Goal::where('matchId', $id)
+            ->get();
+        
+        $match->strDate = MatchesController::formatDate($match->date);
+        $goals = Goal::where('matchId', $match->id)
+        ->get();
+
+        $home = $match->homeTeam->name;
+        $away = $match->awayTeam->name;
+        $homeGoals = $match->homeGoals;
+        $awayGoals = $match->awayGoals;
+    
+        if($home == 'LKS OBROWIEC'){
+            $team = 1;
+        }
+        elseif($away == 'LKS OBROWIEC'){
+            $team = 2;
+        }
+    
+        if(($homeGoals > $awayGoals && $team == 1) || ($homeGoals < $awayGoals && $team == 2)){
+            $match->state = "WYGRANA";
+        }
+        elseif(($homeGoals < $awayGoals && $team == 1) || ($homeGoals > $awayGoals && $team == 2)){
+            $match->state = "PRZEGRANA";
+        }
+        elseif($homeGoals == $awayGoals && $homeGoals !== NULL && $awayGoals !== NULL){
+            $match->state = "REMIS";
+        }
+        
+        return view('admin.match.editGoals', [
             'id' => $id,
             'match' => $match,
-            'players' => $players
+            'players' => $players,
+            'goals' => $goals
         ]);
     }
 
     public function update(Request $request, $matchId){
+        // Sprawdź czy ilość strzelonych bramek
+        // jest równa ilości bramek
+        // strzelonych na podstawie wyniku
+
+        Goal::where('matchId', $matchId)->delete();
+
         $players = $request->players;
         $quantities = $request->quantities;
+
         for($i=0; $i<count($players); $i++){
             if(!$players[$i] && !$quantities[$i]){
                 continue;
@@ -36,14 +129,17 @@ class MatchesController extends Controller
                 'quantity' => $quantities[$i],
             ];
         }
+
         foreach ($goals as $goal){
             $player = Player::where('name', $goal['player'])->firstOrFail();
+            
             Goal::create([
                 'matchId' => $matchId,
                 'playerId' => $player->id,
                 'quantity' => $goal['quantity']
             ]);
         }
+
         return redirect()->route('home');
     }
 

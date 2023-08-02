@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\MatchesController;
 use App\Http\Controllers\PlayersController;
+use App\Http\Controllers\TeamsController;
 
 use App\Models\Table;
 use App\Models\Player;
 use App\Models\LkSMatch;
 use App\Models\Goal;
+
+use Illuminate\Database\Eloquent\Builder;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,9 @@ Route::get('/', function () {
     list($lastMatch, $matchGoals) = MatchesController::getLastMatch();
     $nextMatch = MatchesController::getNextMatch();
     $goals = Goal::take(3)
+        ->whereHas('match', function (Builder $q) {
+            $q->where('matches.season', env('CURRENT_SEASON'));
+        })
         ->groupBy('playerId')
         ->selectRaw('playerId, SUM(quantity) as quantity')
         ->orderBy('quantity', 'desc')
@@ -46,6 +52,14 @@ Route::get('/', function () {
         'goals' => $goals
     ]);
 })->name('home');
+
+Route::get('/kontakt', function(){
+    return view('contact');
+})->name('contact');
+
+Route::get('/klub', function(){
+    return view('club');
+})->name('club');
 
 Route::get('/terminarz', function () {
     $currentSeason = '2022/2023';
@@ -96,8 +110,25 @@ Route::get('/createPlayer', function(){
 Route::controller(MatchesController::class)
     ->name('match.')
     ->group(function(){
+        Route::get('/matches', 'index')->name('index');
+        Route::get('/match/create', 'create')->name('create');
+        Route::post('/match/store', 'store')->name('store');
         Route::get('/match/edit/{id}', 'edit')->name('edit');
+        Route::get('/match/edit/{id}/goals', 'editGoals')->name('editGoals');
         Route::post('/match/update/{id}', 'update')->name('update');
+    }
+);
+
+Route::controller(TeamsController::class)
+    ->name('team.')
+    ->group(function(){
+        Route::get('/teams', 'index')->name('index');
+        Route::get('/teams/create', 'create')->name('create');
+        Route::post('/teams/store', 'store')->name('store');
+        Route::get('/team/{id}', 'show')->name('show');
+        Route::get('/team/edit/{id}', 'edit')->name('edit');
+        Route::post('/team/update/{id}', 'update')->name('update');
+        Route::post('/team/team/{id}', 'delete')->name('delete');
     }
 );
 
@@ -105,8 +136,12 @@ Route::controller(PlayersController::class)
     ->name('player.')
     ->group(function(){
         Route::get('/players', 'index')->name('index');
+        Route::get('/player/new', 'new')->name('new');
+        Route::post('/player/create', 'create')->name('create');
         Route::get('/player/{id}', 'show')->name('show');
+        Route::get('/player/edit/{id}', 'edit')->name('edit');
         Route::post('/player/update/{id}', 'update')->name('update');
+        Route::post('/player/delete/{id}', 'delete')->name('delete');
     }
 );
 

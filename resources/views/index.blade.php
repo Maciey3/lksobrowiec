@@ -1,5 +1,27 @@
 @extends('layouts.main')
 
+@section('style')
+    <style>
+        #lastMatchGoals::-webkit-scrollbar {
+            width: 0.5rem;
+        }
+
+        /* Handle */
+        #lastMatchGoals::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 1rem;
+        }
+    </style>
+@endsection
+
+@section('bg1')
+    <img class="w-full absolute z-[-1] left-0 top-[10vw] overflow-x-hidden select-none" src="{{asset('storage/bg4.png')}}"/>
+@endsection
+
+@section('bg2')
+    <img class="w-full absolute z-[-2] left-0 top-[1540px] select-none" src="{{asset('storage/bg_auto_x2_cut.jpg')}}"/>
+@endsection
+
 @section('content')
 
     <!-- Carousel -->
@@ -39,7 +61,7 @@
     </div>
     <!-- O nas -->
     <div class="w-full mt-24 flex justify-center">
-        <a class="min-[2000px]:w-1/3 w-1/2 bg-white rounded-xl big-shadow" href="">
+        <a class="min-[2000px]:w-1/3 w-1/2 bg-white rounded-xl big-shadow" href="{{route('club')}}">
             <div class="buttonAbout h-40 flex justify-center items-center text-6xl font-bold uppercase text-white text-shadow transition-long" style="background-image: url({{asset('storage/obrowiec.png')}})">
                 O nas
             </div>
@@ -115,13 +137,13 @@
                     </div>
                     <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                         <div class="w-full text-center">
-                            <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->homeTeam->image)}}" />
+                            <img class="w-28 m-auto" src="{{asset('storage/teams/' . $nextMatch->homeTeam->image)}}" />
                         </div>
                         <div class="text-sky-400 font-bold text-4xl row-span-2">
                             VS
                         </div>
                         <div class="w-full text-center">
-                            <img class="w-28 m-auto" src="{{asset('storage/' . $nextMatch->awayTeam->image)}}" />
+                            <img class="w-28 m-auto" src="{{asset('storage/teams/' . $nextMatch->awayTeam->image)}}" />
                         </div>
                         <p class="py-4 text-xl font-bold">{{$nextMatch->homeTeam->name}}</p>
                         <!-- <p class="py-4 text-xl font-bold">Pogoda:<br> <i class="fa-solid fa-cloud-sun"></i></p> -->
@@ -147,9 +169,14 @@
                     <div class="w-full flex justify-between py-2 px-4 bg-gray-200 rounded-t-xl font-bold text-left text-2xl">
                         <p>Ostatni mecz</p>
                         @auth
-                            <a href="{{route('match.edit', ['id' => $lastMatch->id])}}" class="hover:text-sky-400">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
+                            <div class="flex gap-4">
+                                <a href="{{route('match.editGoals', ['id' => $lastMatch->id])}}" class="hover:text-sky-400">
+                                    <i class='fa-solid fa-futbol'></i>
+                                </a>
+                                <a href="{{route('match.edit', ['id' => $lastMatch->id])}}" class="hover:text-sky-400">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                            </div>
                         @endauth
                     </div>
                     <div class="w-56 relative m-auto top-12 font-bold text-md">
@@ -164,13 +191,13 @@
                     </div>
                     <div class="w-full px-4 grid grid-cols-3 justify-center items-center justify-items-center">
                         <div class="w-full text-center">
-                            <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->homeTeam->image)}}" />
+                            <img class="w-28 m-auto" src="{{asset('storage/teams/' . $lastMatch->homeTeam->image)}}" />
                         </div>
                         <div class="text-sky-400 font-bold text-4xl self-end">
                             {{$lastMatch->homeGoals}}:{{$lastMatch->awayGoals}}
                         </div>
                         <div class="w-full text-center">
-                            <img class="w-28 m-auto" src="{{asset('storage/' . $lastMatch->awayTeam->image)}}" />
+                            <img class="w-28 m-auto" src="{{asset('storage/teams/' . $lastMatch->awayTeam->image)}}" />
                         </div>
                         <p class="py-4 text-xl font-bold">{{$lastMatch->homeTeam->name}}</p>
                         <p @class([
@@ -183,7 +210,7 @@
                         </p>
                         <p class="py-4 text-xl font-bold">{{$lastMatch->awayTeam->name}}</p>
                     </div>
-                    <div class="w-full py-2 px-4 grid grid-cols-1 gap-4 bg-gray-800 rounded-b-xl font-bold text-left text-2xl">
+                    <div id="lastMatchGoals" class="w-full max-h-[10.7rem] py-2 px-4 grid grid-cols-1 gap-4 bg-gray-800 rounded-b-xl font-bold text-left text-2xl overflow-y-auto scrollbar-thumb-blue-500 scrollbar-track-blue-500">
                         @if(count($matchGoals))
                             @foreach ($matchGoals as $goal)
                                 <p class="py-1 text-white"> {{$goal->player->name}}
@@ -208,7 +235,7 @@
             @foreach ($goals as $goal)
                 <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
                     <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                        <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
+                        <img class="w-ful h-full rounded-t-xl" src="{{asset('storage/players/' . $goal->player->image)}}" />                    
                     </div>
                     <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
                         <p class="text-4xl uppercase text-sky-500 border-">{{$goal->quantity}} <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>

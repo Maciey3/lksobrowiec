@@ -4,11 +4,19 @@
     font-family: 'Poppins', sans-serif;
 }
 
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
 body{
     /* height: 300vh; */
     /* overflow-x: hidden; */
 }
 
+.input-shadow{
+    box-shadow: 1px 2px 20px 0px #c8c8c8;
+}
 
 .small-shadow{
     box-shadow: 2px 2px 9px 0px #595959;

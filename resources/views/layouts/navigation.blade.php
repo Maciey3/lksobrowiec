@@ -6,9 +6,9 @@
 </div>
 <!-- Nav -->
 <nav class="w-full flex justify-center content-center text-center gap-24">
-    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="{{ route('home')}}">Home</a>
-    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Klub</a>
-    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="{{ route('matches')}}">Rozgrywki</a>
+    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="{{route('home')}}">Home</a>
+    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="{{route('club')}}">Klub</a>
+    <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="{{route('matches')}}">Rozgrywki</a>
     <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Galeria</a>
     <a class="w-36 py-2 rounded-xl bg-white small-shadow text-xl font-semibold" href="#">Partnerzy</a>
 </nav>

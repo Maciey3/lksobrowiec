@@ -15,6 +15,23 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.0-rc.4/dist/css/tom-select.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0-rc.4/dist/js/tom-select.complete.min.js"></script>
+
+        <style>
+            .ts-control, .ts-control > input{
+                
+                font-size: 1rem;
+                font-weight: bold;
+            }
+
+            .ts-control > input::placeholder{
+                font-weight: normal !important;
+                color: black;
+            }
+
+            .ts-dropdown{
+                /* font-size: 1rem; */
+            }
+        </style>
     </head>
     <body class="px-24">
         <!-- Admin Panel -->
