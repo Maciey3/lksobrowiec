@@ -11,6 +11,11 @@
             background: #38bdf8;
             border-radius: 1rem;
         }
+
+        .swiper-pagination, .swiper-pagination-bullet, .swiper-pagination-bullets, .swiper-pagination-bullet{
+            display: none;
+        }
+
     </style>
 @endsection
 
@@ -116,9 +121,26 @@
     
     <!-- Sponsorzy i mecze -->
     <div class="w-full mt-48 grid grid-cols-2 justify-items-center items-center justify-center text-center gap-4">
-        <div class="h-[500px] w-84 grid grid-rows-2 justify-center items-center justify-items-center rounded-xl big-shadow bg-white">
-            <img class="w-1/2" src="{{asset('storage/beno.jpg')}}" />
-            <img class="w-1/2" src="{{asset('storage/interget.png')}}" />
+        <div class="w-full grid grid-cols-1 justify-items-center">
+            {{-- <h6 class="w-2/4 pb-1 text-2xl text-white font-bold text-left uppercase">> Sponsorzy</h6> --}}
+            <div class="swiper-sponsors-container h-[500px] w-2/4 flex justify-center items-center justify-items-center rounded-xl big-shadow bg-white" id="swiper-sponsors-container">
+                {{-- <img class="w-1/2" src="{{asset('storage/beno.jpg')}}" />
+                <img class="w-1/2" src="{{asset('storage/interget.png')}}" /> --}}
+                <swiper-container class="h-full rounded-xl swiper-wrapper" pagination="true" pagination-clickable="false" navigation="false" space-between="30"
+                centered-slides="false" autoplay-delay="5000" autoplay-disable-on-interaction="false" loop="true">
+                    <swiper-slide class="grid grid-rows-2 justify-center items-center justify-items-center">
+                        <img class="w-3/6" src="{{asset('storage/sponsors/beno.jpg')}}" />
+                        <img class="w-4/6" src="{{asset('storage/sponsors/strazaczki-pl.png')}}" />
+                    </swiper-slide>
+                    <swiper-slide class="grid grid-rows-2 justify-center items-center justify-items-center">
+                        <img class="w-3/6" src="{{asset('storage/sponsors/interget.png')}}" />
+                        <img class="w-4/6" src="{{asset('storage/sponsors/spec-instal.png')}}" />
+                    </swiper-slide>
+                    {{-- <swiper-slide class="grid grid-rows-1 justify-center items-center justify-items-center">
+                        <img class="w-4/6" src="{{asset('storage/sponsors/strazaczki-pl.png')}}" />
+                    </swiper-slide> --}}
+                </swiper-container>
+            </div>
         </div>
         
         <div class="grid grid-cols-1 gap-24">
@@ -229,35 +251,39 @@
             @endif
         </div>
     </div>
+    
     <!-- Strzelcy -->
-    <div class="swiper mySwiper min-[2000px]:w-9/12 w-11/12 h-[400px] mt-48 py-4 px-12">
-        <div class="swiper-wrapper flex fustify-center">
-            @foreach ($goals as $goal)
-                <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
-                    <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                        <img class="w-ful h-full rounded-t-xl" src="{{asset('storage/players/' . $goal->player->image)}}" />                    
+    @if(count($goals))
+        <div class="swiper mySwiper min-[2000px]:w-9/12 w-11/12 h-[400px] mt-48 py-4 px-12">
+            <div class="swiper-wrapper flex fustify-center">
+                @foreach ($goals as $goal)
+                    <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
+                        <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
+                            <img class="w-ful h-full rounded-t-xl" src="{{asset('storage/players/' . $goal->player->image)}}" />                    
+                        </div>
+                        <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
+                            <p class="text-4xl uppercase text-sky-500 border-">{{$goal->quantity}} <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
+                            <p class="text-3xl">{{$goal->player->name}}</p>
+                        </div>
                     </div>
-                    <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
-                        <p class="text-4xl uppercase text-sky-500 border-">{{$goal->quantity}} <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
-                        <p class="text-3xl">{{$goal->player->name}}</p>
+                @endforeach
+                {{-- @for ($i=0; $i<4; $i++)
+                    <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
+                        <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
+                            <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
+                        </div>
+                        <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
+                            <p class="text-4xl uppercase text-sky-500 border-">20 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
+                            <p class="text-3xl">{{$player->name}}</p>
+                        </div>
                     </div>
-                </div>
-            @endforeach
-            {{-- @for ($i=0; $i<4; $i++)
-                <div class="swiper-slide text-center bg-white big-shadow rounded-xl">
-                    <div class="w-full h-3/5 bg-gray-200 rounded-t-xl">
-                        <img class="w-ful h-full" src="{{asset('storage/profile.png')}}" />                    
-                    </div>
-                    <div class="w-full h-2/5 py-6 rounded-b-xl grid grid-cols-1 font-bold">
-                        <p class="text-4xl uppercase text-sky-500 border-">20 <i class="relative bottom-1 text-2xl fa-solid fa-futbol"></i></p>
-                        <p class="text-3xl">{{$player->name}}</p>
-                    </div>
-                </div>
-            @endfor --}}
-            
+                @endfor --}}
+                
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="swiper-pagination"></div>
-    </div>
+    @endif
+
 @endsection
 
 @section('scripts')

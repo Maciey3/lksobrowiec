@@ -11,10 +11,10 @@ class PlayersController extends Controller
 {
     public function index(){
         $playersActive = Player::where('active', 1)
-            ->get();
+            ->paginate(10);
         
         $playersUnactive = Player::where('active', 0)
-            ->get();
+            ->paginate(5);
         
         return view('admin.player.players', [
             'playersActive' => $playersActive,

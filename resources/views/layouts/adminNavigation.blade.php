@@ -6,6 +6,7 @@
         <a class="px-2" href="{{route('player.index')}}"><i class="text-sm pr-1 fa-solid fa-user"></i> Zawodnicy</a>
         <a class="px-2" href="{{route('match.index')}}"><i class="text-sm pr-1 fa-solid fa-futbol"></i> Mecze</a>
         <a class="px-2" href="{{route('team.index')}}"><i class="text-sm pr-1 fa-solid fa-users"></i> Drużyny</a>
+        <a class="px-2" href="{{route('update')}}"><i class="text-sm pr-1 fa-solid fa-download"></i></i> Uzupełnij</a>
     </div>
     <div>
         Admin

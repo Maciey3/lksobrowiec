@@ -14,7 +14,8 @@ use Carbon\Carbon;
 class MatchesController extends Controller
 {
     public function index(){
-        $matches = LksMatch::get();
+        $matches = LksMatch::where('season', env('CURRENT_SEASON'))
+            ->paginate(10);
 
         return view('admin.match.matches', [
             'matches' => $matches
@@ -43,6 +44,7 @@ class MatchesController extends Controller
         LksMatch::create([
             'teamHomeId' => $homeTeam->id,
             'teamAwayId' => $awayTeam->id,
+            'type' => $request['type'],
             'date' => $date,
             'season' => env('CURRENT_SEASON')
         ]);
@@ -111,14 +113,59 @@ class MatchesController extends Controller
     }
 
     public function update(Request $request, $matchId){
+        $homeTeam = Team::where('name', $request['homeTeam'])
+            ->firstOrCreate([
+                'name' => $request['homeTeam']
+            ]);
+        $awayTeam = Team::where('name', $request['awayTeam'])
+            ->firstOrCreate([
+                'name' => $request['awayTeam']
+            ]);
+        
+        $date = $request['date'] . " " . $request['time'];
+
+        // dd($date);
+        // dd(Carbon::createFromFormat('Y-m-d H:i:s', $date)->toDateTime());
+
+        LksMatch::where('id', $matchId)
+            ->update([
+                'teamHomeId' => $homeTeam->id,
+                'teamAwayId' => $awayTeam->id,
+                'homeGoals' => $request['homeGoals'] ?? NULL,
+                'awayGoals' => $request['awayGoals'] ?? NULL,
+                'type' => $request['type'],
+                'date' => $date,
+            ]);
+        
+        return redirect()->route('match.index');
+    }
+
+    public function updateGoals(Request $request, $matchId){
         // Sprawdź czy ilość strzelonych bramek
         // jest równa ilości bramek
         // strzelonych na podstawie wyniku
+        $obrowiec = Team::where('name', 'LKS OBROWIEC')
+            ->firstOrFail();
 
-        Goal::where('matchId', $matchId)->delete();
-
+        $match = LksMatch::where('id', $matchId)
+            ->firstOrFail();
+        
+        
+        if($match->teamHomeId == $obrowiec->id){
+            $obrowiecGoals = $match->homeGoals;
+        }
+        else{
+            $obrowiecGoals = $match->awayGoals;
+        }
+            
         $players = $request->players;
         $quantities = $request->quantities;
+        
+        if($obrowiecGoals != array_sum($quantities)){
+            return redirect()->back();
+        }
+            
+        Goal::where('matchId', $matchId)->delete();
 
         for($i=0; $i<count($players); $i++){
             if(!$players[$i] && !$quantities[$i]){
@@ -144,12 +191,12 @@ class MatchesController extends Controller
     }
 
 
-    public function scrapMatches(){
-        $currentSeason = '2022/2023';
+    static public function scrapMatches(){
+        $currentSeason = env('CURRENT_SEASON');
         $targetClass = 'tabela-terminarz';
         $walkower = ' - drużyna wycofana, walkower';
 
-        $link = 'https://pilkaopolska.pl/klasa-b-grupa-vii/';
+        $link = env('CURRENT_GROUP_ADDRESS');
         $html = file_get_contents($link);
 
         $dom = new DOMDocument;
@@ -197,7 +244,6 @@ class MatchesController extends Controller
         }
 
         foreach ($matches as $match) {
-            // dd($match);
             $homeTeam = $match['homeTeam'];
             $awayTeam = $match['awayTeam'];
             $homeGoals = $match['homeGoals'];
@@ -215,24 +261,37 @@ class MatchesController extends Controller
                             'name' => $awayTeam
                         ])
                         ->id;
-
-            LksMatch::where('teamHomeId', $homeId)
+            
+            $match = LksMatch::where('teamHomeId', $homeId)
                 ->where('teamAwayId', $awayId)
-                ->where('date', $date)
                 ->where('season', $currentSeason)
-                ->firstOrCreate([
+                ->where('type', 'liga')
+                ->first();
+
+            if($match){
+                if($homeGoals && $awayGoals){
+                    $match->update([
+                        'homeGoals' => $homeGoals,
+                        'awayGoals' => $awayGoals,
+                    ]);
+                }
+                if($date != $match->date){
+                    $match->update([
+                        'date' => $date
+                    ]);
+                }
+            }
+            else{
+                LksMatch::create([
                     'teamHomeId' => $homeId,
                     'teamAwayId' => $awayId,
+                    'homeGoals' => $homeGoals,
+                    'awayGoals' => $awayGoals,
                     'date' => $date,
                     'season' => $currentSeason
-                ],
-                [
-                    'homeGoals' => $homeGoals,
-                    'awayGoals' => $awayGoals
                 ]);
+            }
         }
-        // POPRAWIĆ DODAWANIE WYNIKÓW, Z TEGO POWODU ŻE WYNIKI SIĘ NIE NADPISUJĄ
-        dd($matches);
     }
 
     static public function getLastMatch() : Array {

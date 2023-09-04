@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="small-shadow rounded-xl w-64 mt-6 mb-4 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">Dodaj mecz<h1>
-    <div class="w-2/5 grid grid-cols-1 gap-8 m-auto justify-center justify-items-center border-2 border-black bg-[#ffffffdd] py-8 px-10 my-2">
+    <div class="w-3/5 grid grid-cols-1 gap-8 m-auto justify-center justify-items-center border-2 border-black bg-[#ffffffdd] py-8 px-10 my-2">
         <form class="contents" action="{{route('match.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="w-full flex justify-evenly gap-12">
@@ -27,13 +27,14 @@
 
             <select class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow" name="type" required>
                 <option class="text-gray-400" selected disabled>Wybierz rodzaj meczu</option>
-                <option>Sparing</option>
-                <option>Puchar</option>
+                <option value="sparing">Sparing</option>
+                <option value="puchar">Puchar</option>
+                <option value="liga">Liga</option>
             </select>
 
-            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow" type="date" placeholder="Data urodzin" name="date" required>
+            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow" type="date" name="date" required>
 
-            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow" type="time" placeholder="Data urodzin" name="time" required>
+            <input class="w-64 h-9 px-2 border border-gray-300 rounded-sm input-shadow" type="time" name="time" required>
 
             <button type="submit" class="text-white bg-green-500 rounded-xl py-2 px-4">
                 Utwórz

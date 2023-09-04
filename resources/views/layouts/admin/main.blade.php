@@ -18,7 +18,6 @@
 
         <style>
             .ts-control, .ts-control > input{
-                
                 font-size: 1rem;
                 font-weight: bold;
             }

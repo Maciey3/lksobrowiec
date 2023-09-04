@@ -15,6 +15,8 @@ use App\Models\Goal;
 
 use Illuminate\Database\Eloquent\Builder;
 
+use Carbon\Carbon;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,7 +29,7 @@ use Illuminate\Database\Eloquent\Builder;
 */
 
 Route::get('/', function () {
-    $currentSeason = '2022/2023';
+    $currentSeason = env('CURRENT_SEASON');
     $teams = Table::where('season', $currentSeason)
         ->orderBy('points', 'desc')
         ->get();
@@ -61,13 +63,50 @@ Route::get('/klub', function(){
     return view('club');
 })->name('club');
 
+Route::get('/sponsorzy', function(){
+    return view('sponsors');
+})->name('sponsors');
+
 Route::get('/terminarz', function () {
-    $currentSeason = '2022/2023';
+    function sortMatches($matches){
+        $sorted = [];
+        foreach($matches as $i => $match){
+            if($i+1 % 2){
+                if(!isset($matches[$i])){
+                    continue;
+                }
+                array_push($sorted, $match);
+                unset($matches[$i]);
+            }
+
+            $homeTeam = $match->teamHomeId;
+            $awayTeam = $match->teamAwayId;
+            foreach ($matches as $j => $$match) {
+                if($$match->teamHomeId == $awayTeam && $$match->teamAwayId == $homeTeam){
+                    // dump($$match->homeTeam->id . $awayTeam .  $$match->awayTeam->id . $homeTeam);
+                    array_push($sorted, $$match);
+                    unset($matches[$j]);
+                    break;
+                }
+            }
+        }
+        
+        return $sorted;
+    }
+
+    $currentSeason = '2023/2024';
     $matches = LkSMatch::where('season', $currentSeason)
         ->orderBy('date', 'asc')
         ->get();
 
+    // dd($matches);
+    $matches = sortMatches($matches);
+
     foreach ($matches as $key => $match){
+        list($match->date, $match->time) = explode(' ', $match->date);
+        $match->time = explode(':', $match->time)[0] . ':' . explode(':', $match->time)[1];
+        $match->date = (new Carbon($match->date))->format('d.m.Y');
+
         $home = $match->homeTeam->name;
         $away = $match->awayTeam->name;
 
@@ -95,8 +134,16 @@ Route::get('/terminarz', function () {
     return view('matches', ['matches' => $matches]);
 })->name('matches');
 
-Route::get('/updateTable', [TableController::class, 'scrapTable']);
-Route::get('/updateMatches', [MatchesController::class, 'scrapMatches']);
+
+Route::get('/update', function(){
+    MatchesController::scrapMatches();
+    TableController::scrapTable();
+
+    return redirect()->route('home');
+})->name('update');
+
+// Route::get('/updateTable', [TableController::class, 'scrapTable']);
+// Route::get('/updateMatches', [MatchesController::class, 'scrapMatches']);
 
 Route::get('/createPlayer', function(){
     $random = rand(1,9999);
@@ -114,8 +161,9 @@ Route::controller(MatchesController::class)
         Route::get('/match/create', 'create')->name('create');
         Route::post('/match/store', 'store')->name('store');
         Route::get('/match/edit/{id}', 'edit')->name('edit');
-        Route::get('/match/edit/{id}/goals', 'editGoals')->name('editGoals');
         Route::post('/match/update/{id}', 'update')->name('update');
+        Route::get('/match/edit/{id}/goals', 'editGoals')->name('editGoals');
+        Route::post('/match/update/goals/{id}', 'updateGoals')->name('updateGoals');
     }
 );
 

@@ -5,16 +5,16 @@
         $i = 1;
     @endphp
     {{-- @dd($match) --}}
-    <h1 class="small-shadow rounded-xl w-64 mt-6 mb-6 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">Dodaj strzelców<h1>
+    <h1 class="small-shadow rounded-xl w-64 mt-6 mb-6 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">Dodaj strzelców</h1>
 
     <div class="w-2/5 pt-12 gap-8 m-auto justify-center justify-items-center border-2 border-black bg-[#ffffffdd] py-8 px-10 my-2 text-center">
     {{-- <div class="mt-24 pb-24 w-1/2 bg-[#c3c3c3b2] m-auto text-center"> --}}
-        <div class="grid grid-cols-[3fr_2fr] justify-center items-center text-center gap-y-6">
-            <form action="{{route('match.update', ['id' => $id])}}" id='goalsForm' class='contents' method="POST" enctype="multipart/form-data">
+        <div class="grid grid-cols-[2fr_1fr] justify-center justify-items-center items-center text-center gap-y-6">
+            <form action="{{route('match.updateGoals', ['id' => $id])}}" id='goalsForm' class='contents' method="POST" enctype="multipart/form-data">
                 @method('POST')
                 @csrf
                 @foreach ($goals as $goal)
-                    <select id='select-player-{{$i}}' class="searchPlayer w-64 text-red-500 justify-self-end input-shadow" autocomplete="off" name="players[]">
+                    <select id='select-player-{{$i}}' class="searchPlayer w-64 justify-self-end" autocomplete="off" name="players[]">
                         <option></option>
                         @foreach ($players as $player)
                             <option
@@ -25,7 +25,7 @@
                         @endforeach
                     </select>
 
-                    <select class="w-10 h-8 ml-10 input-shadow" name="quantities[]">
+                    <select class="w-10 h-8 ml-10 input-shadow border-gray-300 rounded-sm" name="quantities[]">
                         <option default></option>
                         @for($j=1; $j<13; $j++)
                             <option

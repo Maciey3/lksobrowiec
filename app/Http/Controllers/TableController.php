@@ -9,11 +9,11 @@ use DOMDocument;
 
 class TableController extends Controller
 {
-    public function scrapTable(){
-        $currentSeason = '2022/2023';
+    static public function scrapTable(){
+        $currentSeason = env('CURRENT_SEASON');
         $targetClass = 'tabela-wynikow';
 
-        $link = 'https://pilkaopolska.pl/klasa-b-grupa-vii/';
+        $link = env('CURRENT_GROUP_ADDRESS');
         $html = file_get_contents($link);
 
         $dom = new DOMDocument;
@@ -75,6 +75,6 @@ class TableController extends Controller
                 ]);
         }
 
-        dd($teams);
+        // dd($teams);
     }
 }

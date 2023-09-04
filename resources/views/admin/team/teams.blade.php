@@ -1,16 +1,25 @@
 @extends('layouts.admin.main')
 
 @section('content')
-    <div class="w-2/5 m-auto">
-        <a class="contents" href="{{route('team.create')}}">
-            <button class="m-auto block w-10 h-10 rounded-full bg-green-500 text-xl text-white font-bold">
-                +
-            </button>
-        </a>
-        <h1 class="small-shadow rounded-xl w-64 mt-6 mb-4 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">Drużyny<h1>
-        <div class="max-h-[30rem] overflow-auto">
+    <div class="w-4/5 m-auto">
+        
+        <h1 class="small-shadow rounded-xl w-64 mt-6 mb-4 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">
+            Drużyny
+        <h1>
+        {{-- <input class="w-1/6 input-shadow" type="text" id="search"/> --}}
+        
+
+        <div class="m-auto w-4/5 grid grid-cols-1 gap-4 justify-items-center">
+            <div class="flex w-full justify-between">
+                <input before="x" class="w-64 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left font-bold placeholder:font-normal" type="text" placeholder="Szukaj" id="search">
+                <a href="{{route('team.create')}}">
+                    <button class="h-9 px-4 rounded-xl bg-green-500 text-white font-bold">
+                        Dodaj
+                    </button>
+                </a>
+            </div>
             @forelse ($teams as $team)
-                <div class="border-2 border-black bg-[#ffffffdd] hover:bg-[#eeeeeedd] h-10 flex justify-between items-center px-10 my-2 ">
+                <div class="w-full small-shadow rounded-xl bg-[#ffffffdd] hover:bg-[#eeeeeedd] h-10 flex justify-between items-center px-10">
                     <p class="font-bold">
                         {{$team->name}}
                     </p>
@@ -23,6 +32,7 @@
             @empty
                 Brak
             @endforelse
+            {{ $teams->links() }}
         </div>
     </div>
 @endsection

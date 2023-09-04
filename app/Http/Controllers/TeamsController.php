@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class TeamsController extends Controller
 {
     public function index(){
-        $teams = Team::get();
+        $teams = Team::paginate(10);
 
         return view('admin.team.teams', [
             'teams' => $teams

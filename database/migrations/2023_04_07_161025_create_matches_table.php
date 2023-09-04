@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('teamAwayId');
             $table->integer('homeGoals')->nullable();
             $table->integer('awayGoals')->nullable();
+            $table->enum('type', ['liga', 'puchar', 'sparing']);
             $table->dateTime('date');
             $table->string('season', 9);
             $table->timestamps();
