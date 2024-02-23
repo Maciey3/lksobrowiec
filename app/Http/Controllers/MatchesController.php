@@ -10,15 +10,46 @@ use App\Models\LksMatch;
 use App\Models\Player;
 use App\Models\Goal;
 use Carbon\Carbon;
+use App\Alert\Alert;
 
 class MatchesController extends Controller
 {
-    public function index(){
-        $matches = LksMatch::where('season', env('CURRENT_SEASON'))
+    public function index(Request $request){
+        if($request['search'] || $request['searchSeason']){
+            $search = $request['search'];
+            $season = $request['searchSeason'];
+            // dd($season);
+            $matches = LksMatch::query()
+                ->when($search, function($query, $search){
+                    return $query->whereHas('homeTeam', function($query) use ($search){
+                        $query->where('name', 'LIKE', "%$search%");
+                    })->orWhereHas('awayTeam', function($query) use ($search){
+                        $query->where('name', 'LIKE', "%$search%");
+                    });                    
+                })
+                ->when($season, function($query, $season){
+                    return $query->where('season', 'LIKE', "%$season%");
+                }, function($query){
+                    return $query->where('season', env('CURRENT_SEASON'));
+                })
+                ->paginate(10);
+        }
+        else{
+            $matches = LksMatch::where('season', env('CURRENT_SEASON'))
             ->paginate(10);
+        }
+
+        $seasons = LksMatch::select('season')
+            ->distinct()
+            ->get()
+            ->toArray();
+    
 
         return view('admin.match.matches', [
-            'matches' => $matches
+            'matches' => $matches,
+            'seasons' => $seasons,
+            'search' => $search ?? "",
+            'searchSeason' => $season ?? "",
         ]);
     }
 
@@ -49,6 +80,8 @@ class MatchesController extends Controller
             'season' => env('CURRENT_SEASON')
         ]);
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('match.index');
     }
 
@@ -137,6 +170,8 @@ class MatchesController extends Controller
                 'date' => $date,
             ]);
         
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('match.index');
     }
 
@@ -162,6 +197,8 @@ class MatchesController extends Controller
         $quantities = $request->quantities;
         
         if($obrowiecGoals != array_sum($quantities)){
+            $alert = new Alert('fail', "Wpisano błędną ilość bramek (wpisano " . array_sum($quantities) . ", a powinny być $obrowiecGoals)");
+            $alert->use();
             return redirect()->back();
         }
             
@@ -187,6 +224,8 @@ class MatchesController extends Controller
             ]);
         }
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('home');
     }
 

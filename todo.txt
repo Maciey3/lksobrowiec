@@ -1,0 +1,14 @@
+FRONTEND:
+ - widok mobilny wszystkich stron
+ - widok terminarza i rozgrywek
+ - wybór sezonu w terminarzu i rozgrywkach
+ - tło na głównej jest rozjechane
+
+BACKEND:
+ ✓ wyszukiwanie administratora (mecze, zawodnicy itd)
+ - tworzenie użytkowników
+ - dodanie ról i cms związany z nimi
+ ✓ komunikaty o pomyślnej lub błędnej operacji
+ - dziennik zdarzeń
+
+

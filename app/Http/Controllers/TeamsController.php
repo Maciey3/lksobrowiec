@@ -5,14 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Team;
 use Illuminate\Support\Facades\Storage;
+// use App\Message;
+use App\Alert\Alert;
 
 class TeamsController extends Controller
 {
-    public function index(){
-        $teams = Team::paginate(10);
+    public function index(Request $request){
+        if($search = $request['search']){
+            $teams = Team::where('name', 'LIKE', "%$search%")
+                ->paginate(10);
+        }
+        else{
+            $teams = Team::paginate(10);
+        }
 
         return view('admin.team.teams', [
-            'teams' => $teams
+            'teams' => $teams,
+            'search' => $search ?? "",
         ]);
     }
 
@@ -50,6 +59,8 @@ class TeamsController extends Controller
             );
         }
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('team.index');
     }
 
@@ -82,12 +93,16 @@ class TeamsController extends Controller
             );
         }
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('team.show', ['id' => $id]);
     }
 
     public function delete($id){
         $team = Team::where('id', $id)->delete();
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('team.index');
     }
 }

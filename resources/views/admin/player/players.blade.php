@@ -2,6 +2,16 @@
 
 @section('content')
     <div class="w-4/5 m-auto">  
+        <div class="m-auto w-4/5 flex justify-between">
+            <form action="{{route('player.index')}}" method="GET">
+                <input class="w-64 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left font-bold placeholder:font-normal" type="text" placeholder="Szukaj" name="search" id="search" value="{{$search}}">
+            </form>
+            <a href="{{route('player.new')}}">
+                <button class="h-9 px-4 rounded-xl bg-green-500 text-white font-bold">
+                    Dodaj
+                </button>
+            </a>
+        </div>
         <h1 class="small-shadow rounded-xl w-64 mt-6 mb-4 bg-white m-auto text-center font-bold text-xl py-4 underline decoration-2 decoration-green-500">
             Aktywni zawodnicy
         <h1>
@@ -9,14 +19,6 @@
         
 
         <div class="m-auto w-4/5 grid grid-cols-1 gap-4 justify-items-center">
-            <div class="flex w-full justify-between">
-                <input before="x" class="w-64 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left font-bold placeholder:font-normal" type="text" placeholder="Szukaj" id="search">
-                <a href="{{route('player.new')}}">
-                    <button class="h-9 px-4 rounded-xl bg-green-500 text-white font-bold">
-                        Dodaj
-                    </button>
-                </a>
-            </div>
             @forelse ($playersActive as $player)
                 <div class="w-full small-shadow rounded-xl bg-[#ffffffdd] hover:bg-[#eeeeeedd] h-10 flex justify-between items-center px-10">
                     <p class="font-bold">
@@ -40,9 +42,9 @@
         
         <div class="m-auto w-4/5 grid grid-cols-1 gap-4 justify-items-center">
             @if(count($playersUnactive))
-                <div class="flex w-full justify-between">
+                {{-- <div class="flex w-full justify-between">
                     <input before="x" class="w-64 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left font-bold placeholder:font-normal" type="text" placeholder="Szukaj" id="search">
-                </div>
+                </div> --}}
             @endif
             @forelse ($playersUnactive as $player)
                 <div class="w-full small-shadow rounded-xl bg-[#eaeaeadd] hover:bg-[#eeeeeedd] h-10 flex justify-between items-center px-10">

@@ -43,5 +43,88 @@
         </div>
         @include('layouts.footer')
         @yield('scripts')
+        <style>
+            .fading{
+                animation-name: fadeOut;
+                animation-duration: 3s;
+                animation-iteration-count: 1;
+                
+            }
+            @keyframes fadeOut{
+                from{
+                    opacity: 1;
+                }
+                to{
+                    opacity: 0;
+                }
+            }
+
+
+            @keyframes unwrap {
+                from {
+                    width: 0%;
+                }
+
+                to {
+                    width: 100%;
+                }
+            }
+        </style>
+        
+        @if(Session::has('alert'))
+            @php
+            $alert = Session::get('alert')
+            @endphp
+            <div id="messageBox" class="fixed opacity-100 w-72 bottom-12 right-12 small-shadow rounded-md bg-white transition-opacity duration-1000">
+                <div
+                @class([
+                    'border-green-700' => $alert->status == 'success',
+                    'border-red-700' => $alert->status == 'fail',
+                    'flex', 'items-center', 'gap-2', 'font-bold', 'py-1', 'px-4'
+                ])>
+                    <i
+                    @class([
+                        'text-green-700' => $alert->status == 'success',
+                        'text-red-700' => $alert->status == 'fail',
+                        'fa-solid', 'fa-circle-check'
+                    ])></i>
+                    <p class="text-xl tracking-wide">
+                        {{$alert->status == 'success' ? 'Sukces' : 'Błąd'}}
+                    </p>
+                </div>
+                <div id="test"
+                @class([
+                    'bg-green-700' => $alert->status == 'success',
+                    'bg-red-700' => $alert->status == 'fail',
+                    'h-[2px]', "animate-[unwrap_linear_{$alert->duration}s]"
+                ])></div>
+                <div class="px-4 py-2">
+                    <p>{{$alert->message}}</p>
+                </div>
+            </div>
+        @endif
+
+        <script>
+            function fadeOut(element, duration){
+                duration = duration*1000;
+                console.log(element);
+                setTimeout(function(){
+                    element.classList.remove('opacity-100');
+                    element.classList.add('opacity-0');
+                }, duration);
+
+                setTimeout(function(){
+                    element.remove();
+                }, duration+1000);
+            }
+
+            @if(Session::has('alert'))
+                fadeOut(document.getElementById("messageBox"), {{$alert->duration}})
+            @endif
+
+        </script>
+        
+
+        
     </body>
 </html>

@@ -12,8 +12,17 @@
         <div class="m-auto w-4/5 grid grid-cols-1 gap-4 justify-items-center">
             <div class="flex w-full justify-between">
                 <div>
-                    <input class="w-32 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left" type="text" placeholder="Szukaj" id="search">
-                    <input class="w-32 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left" type="text" placeholder="Sezon" id="searchSeason">
+                    <form action="{{route('match.index')}}" method="GET">
+                        <input class="w-48 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left" type="text" placeholder="Szukaj" id="search" name="search" value="{{$search}}">
+                        <select class="w-36 h-9 px-4 border border-gray-300 rounded-sm input-shadow text-left" id="searchSeason" name="searchSeason">
+                            <option default value="">Sezon</option>
+                            @foreach ($seasons as $season)
+                                <option
+                                    @selected($season['season'] == $searchSeason)
+                                >{{$season['season']}}</option>
+                            @endforeach
+                        </select>
+                    </form>
                 </div>
                 <a href="{{route('match.create')}}">
                     <button class="h-9 px-4 rounded-xl bg-green-500 text-white font-bold">

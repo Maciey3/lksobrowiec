@@ -6,19 +6,34 @@ use Illuminate\Http\Request;
 use App\Models\Player;
 use App\Models\Goal;
 use Illuminate\Support\Facades\Storage;
+use App\Alert\Alert;
 
 class PlayersController extends Controller
 {
-    public function index(){
-        $playersActive = Player::where('active', 1)
-            ->paginate(10);
+    public function index(Request $request){
+        if($search = $request['search']){
+            $playersActive = Player::where('active', 1)
+                ->where('name', 'LIKE', "%$search%")
+                ->paginate(10);
         
-        $playersUnactive = Player::where('active', 0)
-            ->paginate(5);
+            $playersUnactive = Player::where('active', 0)
+                ->where('name', 'LIKE', "%$search%")
+                ->paginate(5);
+        }
+        else{
+            $playersActive = Player::where('active', 1)
+                ->paginate(10);
+        
+            $playersUnactive = Player::where('active', 0)
+                ->paginate(5);
+        }
+
+        
         
         return view('admin.player.players', [
             'playersActive' => $playersActive,
-            'playersUnactive' => $playersUnactive
+            'playersUnactive' => $playersUnactive,
+            'search' => $search ?? "",
         ]);
     }
 
@@ -48,6 +63,8 @@ class PlayersController extends Controller
             );
         }
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('player.index');
     }
 
@@ -89,6 +106,8 @@ class PlayersController extends Controller
             );
         }
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('player.show', ['id' => $id]);
     }
 
@@ -96,6 +115,8 @@ class PlayersController extends Controller
         $player = Player::where('id', $id)->delete();
         $goals = Goal::where('playerId', $id)->delete();
 
+        $alert = new Alert('success');
+        $alert->use();
         return redirect()->route('player.index');
     }
 }

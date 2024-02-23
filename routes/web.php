@@ -7,6 +7,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\MatchesController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\UserController;
 
 use App\Models\Table;
 use App\Models\Player;
@@ -171,8 +172,8 @@ Route::controller(TeamsController::class)
     ->name('team.')
     ->group(function(){
         Route::get('/teams', 'index')->name('index');
-        Route::get('/teams/create', 'create')->name('create');
-        Route::post('/teams/store', 'store')->name('store');
+        Route::get('/team/create', 'create')->name('create');
+        Route::post('/team/store', 'store')->name('store');
         Route::get('/team/{id}', 'show')->name('show');
         Route::get('/team/edit/{id}', 'edit')->name('edit');
         Route::post('/team/update/{id}', 'update')->name('update');
@@ -190,6 +191,16 @@ Route::controller(PlayersController::class)
         Route::get('/player/edit/{id}', 'edit')->name('edit');
         Route::post('/player/update/{id}', 'update')->name('update');
         Route::post('/player/delete/{id}', 'delete')->name('delete');
+    }
+);
+
+Route::controller(UserController::class)
+    ->name('user.')
+    ->group(function(){
+        Route::get('/users', 'index')->name('index');
+        Route::get('/user/create', 'create')->name('create');
+        Route::post('/user/store', 'store')->name('store');
+        Route::get('/user/{id}', 'show')->name('show');
     }
 );
 

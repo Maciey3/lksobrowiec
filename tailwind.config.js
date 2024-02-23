@@ -13,6 +13,15 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            // keyframes: {
+            //     unwrap1: {
+            //       '0%': { width: '0%' },
+            //       '100%': { width: '100%' },
+            //     }
+            // },
+            // animation: {
+            //     unwrap2: 'unwrap1 1s linear',
+            // }
         },
     },
 
