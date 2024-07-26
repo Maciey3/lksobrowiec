@@ -21,11 +21,12 @@ return new class extends Migration
             $table->integer('awayGoals')->nullable();
             $table->enum('type', ['liga', 'puchar', 'sparing']);
             $table->dateTime('date');
-            $table->string('season', 9);
+            $table->string('season', 9)->nullable();
             $table->timestamps();
 
             $table->foreign('teamHomeId')->references('id')->on('teams');
             $table->foreign('teamAwayId')->references('id')->on('teams');
+            $table->foreign('season')->references('season')->on('seasons_labels');
 
         });
     }

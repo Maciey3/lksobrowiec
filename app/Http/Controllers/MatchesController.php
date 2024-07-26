@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\LksMatch;
 use App\Models\Player;
 use App\Models\Goal;
+use App\Models\SeasonLabel;
 use Carbon\Carbon;
 use App\Alert\Alert;
 
@@ -231,6 +232,7 @@ class MatchesController extends Controller
 
 
     static public function scrapMatches(){
+
         $currentSeason = env('CURRENT_SEASON');
         $targetClass = 'tabela-terminarz';
         $walkower = ' - drużyna wycofana, walkower';
@@ -288,6 +290,7 @@ class MatchesController extends Controller
             $homeGoals = $match['homeGoals'];
             $awayGoals = $match['awayGoals'];
             $date = $match['date'];
+            
 
             $homeId = Team::where('name', $homeTeam)
                         ->firstOrCreate([
@@ -301,6 +304,11 @@ class MatchesController extends Controller
                         ])
                         ->id;
             
+            // dd();
+            if(count(LksMatch::where('season', Null)->get())){
+                return -1;
+            }
+
             $match = LksMatch::where('teamHomeId', $homeId)
                 ->where('teamAwayId', $awayId)
                 ->where('season', $currentSeason)
@@ -327,10 +335,12 @@ class MatchesController extends Controller
                     'homeGoals' => $homeGoals,
                     'awayGoals' => $awayGoals,
                     'date' => $date,
-                    'season' => $currentSeason
+                    'season' => Null
                 ]);
             }
         }
+
+        return 1;
     }
 
     static public function getLastMatch() : Array {
@@ -431,5 +441,21 @@ class MatchesController extends Controller
             'date' => $date,
             'time' => $time
         ];
+    }
+
+    public function markSeasonsLabels(Request $request){
+        // dd(SeasonLabel::where('season', $request['season'])->get());
+        if(!count(SeasonLabel::where('season', $request['season'])->get())){
+            SeasonLabel::create([
+                'season' => $request['season'],
+                'label' => $request['label'],
+            ]);
+        }
+        
+        $matches = LksMatch::where('season', Null)
+            ->update([
+                'season' => $request['season']
+            ]);
+        return redirect()->route('home');
     }
 }

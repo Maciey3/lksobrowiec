@@ -34,7 +34,7 @@ Route::get('/', function () {
     $teams = Table::where('season', $currentSeason)
         ->orderBy('points', 'desc')
         ->get();
-
+    
     list($lastMatch, $matchGoals) = MatchesController::getLastMatch();
     $nextMatch = MatchesController::getNextMatch();
     $goals = Goal::take(3)
@@ -137,10 +137,17 @@ Route::get('/terminarz', function () {
 
 
 Route::get('/update', function(){
-    MatchesController::scrapMatches();
+    $info = MatchesController::scrapMatches();
     TableController::scrapTable();
 
-    return redirect()->route('home');
+    if($info == -1){
+        // return redirect()->route('club');
+        return view('admin.match.labelSeason');
+    }
+    else{
+        return redirect()->route('home');
+    }
+
 })->name('update');
 
 // Route::get('/updateTable', [TableController::class, 'scrapTable']);
@@ -165,6 +172,7 @@ Route::controller(MatchesController::class)
         Route::post('/match/update/{id}', 'update')->name('update');
         Route::get('/match/edit/{id}/goals', 'editGoals')->name('editGoals');
         Route::post('/match/update/goals/{id}', 'updateGoals')->name('updateGoals');
+        Route::post('/matches/markSeasonsLabels', 'markSeasonsLabels')->name('markSeasonsLabels');
     }
 );
 
